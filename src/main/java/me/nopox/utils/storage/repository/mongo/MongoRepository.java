@@ -9,14 +9,18 @@ import me.nopox.utils.storage.repository.Repository;
 import org.bson.Document;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
-public abstract class MongoRepository<K extends String, T extends Class<T>> implements Repository<K, T> {
+public abstract class MongoRepository<K extends String, T> implements Repository<K, T> {
 
-    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(((Class<K>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]).getSimpleName());
+    private String collectionName;
+
+    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
+
+    public MongoRepository(String collectionName) {
+        this.collectionName = collectionName;
+
+    }
 
     @Override
     public void save(K key, T value) {
