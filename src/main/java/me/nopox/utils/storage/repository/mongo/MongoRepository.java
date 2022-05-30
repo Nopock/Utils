@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public abstract class MongoRepository<K extends String, T> implements Repository<K, T> {
 
-    private String collectionName;
+    private final MongoCollection<Document> collection;
 
     /**
      * This needs to be called to initialize the repository
@@ -26,12 +26,12 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      * @param collectionName The name of the collection that this repository will use
      */
     public MongoRepository(String collectionName) {
-        this.collectionName = collectionName;
         System.out.println("[MongoRepository] Initializing repository for collection " + collectionName);
+        this.collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
+
 
     }
 
-    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(this.collectionName);
 
     /**
      * This method saves the object to the database
