@@ -1,4 +1,4 @@
-package me.nopox.utils.storage.repository;
+package me.nopox.utils.storage;
 
 public class JedisConnection {
 
