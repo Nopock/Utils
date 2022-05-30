@@ -73,8 +73,9 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      * @return True if the object exists, false if it doesn't
      */
     @Override
-    public boolean exists(K id) {
-        return collection.find(Filters.eq("_id", id)).first() != null;
+    public CompletableFuture<Boolean> exists(K id) {
+        return CompletableFuture.supplyAsync(() -> collection.find(Filters.eq("_id", id)).first() != null);
+
     }
 
 
