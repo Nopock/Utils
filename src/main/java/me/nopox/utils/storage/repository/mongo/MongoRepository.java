@@ -11,6 +11,11 @@ import org.bson.Document;
 import java.lang.reflect.ParameterizedType;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * @author 98ping
+ * @param <K> The name of the collection that the data should be stored in.
+ * @param <T> The type of the data that should be stored.
+ */
 public abstract class MongoRepository<K extends String, T> implements Repository<K, T> {
 
     private String collectionName;
