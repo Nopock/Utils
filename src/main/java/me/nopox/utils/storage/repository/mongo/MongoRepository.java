@@ -20,8 +20,6 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
     private String collectionName;
 
-    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
-
     /**
      * This needs to be called to initialize the repository
      *
@@ -31,6 +29,8 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         this.collectionName = collectionName;
 
     }
+
+    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
 
     /**
      * This method saves the object to the database
@@ -67,7 +67,7 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     }
 
     /**
-     * This method checks if a object exists in the database
+     * This method checks if an object exists in the database
      *
      * @param id The key of the object (Ex. A player's UUID)
      * @return True if the object exists, false if it doesn't
