@@ -20,6 +20,6 @@ public abstract class RedisRepository<K extends String, T extends Class<T>> impl
 
     @Override
     public CompletableFuture<Boolean> exists(K id) {
-        return false;
+        return null;
     }
 }
