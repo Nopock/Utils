@@ -27,10 +27,11 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      */
     public MongoRepository(String collectionName) {
         this.collectionName = collectionName;
+        System.out.println("[MongoRepository] Initializing repository for collection " + collectionName);
 
     }
 
-    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
+    private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(this.collectionName);
 
     /**
      * This method saves the object to the database
