@@ -17,11 +17,22 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
     private final MongoCollection<Document> collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
 
+    /**
+     * This needs to be called to initialize the repository
+     *
+     * @param collectionName The name of the collection that this repository will use
+     */
     public MongoRepository(String collectionName) {
         this.collectionName = collectionName;
 
     }
 
+    /**
+     * This method saves the object to the database
+     *
+     * @param key The key of the object (Ex. A player's UUID)
+     * @param value The object to save
+     */
     @Override
     public void save(K key, T value) {
         CompletableFuture.runAsync(() -> {
@@ -33,6 +44,12 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         });
     }
 
+    /**
+     * This method retrieves an object from the database
+     *
+     * @param id The key of the object (Ex. A player's UUID)
+     * @return CompletableFuture<T> The object that was retrieved
+     */
     @Override
     public CompletableFuture<T> byId(K id) {
         return CompletableFuture.supplyAsync(() -> {
@@ -44,6 +61,12 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         });
     }
 
+    /**
+     * This method checks if a object exists in the database
+     *
+     * @param id The key of the object (Ex. A player's UUID)
+     * @return True if the object exists, false if it doesn't
+     */
     @Override
     public boolean exists(K id) {
         return collection.find(Filters.eq("_id", id)).first() != null;
