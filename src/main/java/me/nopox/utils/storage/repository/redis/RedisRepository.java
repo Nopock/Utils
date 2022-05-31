@@ -51,4 +51,22 @@ public abstract class RedisRepository<K extends String, T> implements Repository
             return jedis.hexists(this.key, id);
         });
     }
+
+    @Override
+    public void delete(K id) {
+        CompletableFuture.runAsync(() -> {
+            Jedis jedis = this.jedis.getJedisResource();
+
+            jedis.hdel(this.key, id);
+        });
+    }
+
+    @Override
+    public void deleteAll() {
+        CompletableFuture.runAsync(() -> {
+            Jedis jedis = this.jedis.getJedisResource();
+
+            jedis.del(this.key);
+        });
+    }
 }

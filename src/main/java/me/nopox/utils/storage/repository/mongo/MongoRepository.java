@@ -100,6 +100,7 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     /**
      * This method deletes an object from the database
      */
+    @Override
     public void delete(K id) {
         CompletableFuture.runAsync(() -> collection.deleteOne(Filters.eq("_id", id)));
     }
@@ -107,6 +108,7 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     /**
      * This method deletes all objects from the database
      */
+    @Override
     public void deleteAll() {
         CompletableFuture.runAsync(() -> collection.deleteMany(new BsonDocument()));
     }

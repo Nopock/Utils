@@ -13,4 +13,8 @@ public interface Repository<K, T> {
 
     CompletableFuture<Boolean> exists(K id);
 
+    void delete(K id);
+
+    void deleteAll();
+
 }
