@@ -16,9 +16,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public abstract class RedisRepository<K extends String, T> implements Repository<K, T> {
     private final String key;
+    private final Class<T> type;
 
-    public RedisRepository(String key) {
+    public RedisRepository(String key, Class<T> type) {
         this.key = key;
+        this.type = type;
     }
 
     JedisConnection jedis = JedisConnection.getInstance();
@@ -37,7 +39,7 @@ public abstract class RedisRepository<K extends String, T> implements Repository
         return CompletableFuture.supplyAsync(() -> {
             Jedis jedis = this.jedis.getJedisResource();
 
-            return Utils.getInstance().getGSON().fromJson(jedis.hget(this.key, id), (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
+            return Utils.getInstance().getGSON().fromJson(jedis.hget(this.key, id), type);
         });
     }
 

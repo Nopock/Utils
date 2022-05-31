@@ -19,17 +19,18 @@ import java.util.concurrent.CompletableFuture;
 public abstract class MongoRepository<K extends String, T> implements Repository<K, T> {
 
     private final MongoCollection<Document> collection;
+    private final Class<T> type;
 
     /**
      * This needs to be called to initialize the repository
      *
      * @param collectionName The name of the collection that this repository will use
+     * @param clazz The class of the object that this repository will store
      */
-    public MongoRepository(String collectionName) {
+    public MongoRepository(String collectionName, Class<T> clazz) {
         System.out.println("[MongoRepository] Initializing repository for collection " + collectionName);
         this.collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
-
-
+        this.type = clazz;
     }
 
 
@@ -63,7 +64,23 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
             if (doc == null) return null;
 
-            return Utils.getInstance().getGSON().fromJson(doc.toJson(), (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
+            return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
+        });
+    }
+
+    /**
+     * This method retrives an object from the database
+     *
+     * @param key The key of the object (Ex. _id)
+     * @param value The value of the object (Ex. A player's UUID)
+     */
+    public CompletableFuture<T> byKey(String key, String value) {
+        return CompletableFuture.supplyAsync(() -> {
+            Document doc = collection.find(Filters.eq(key, value)).first();
+
+            if (doc == null) return null;
+
+            return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
         });
     }
 
