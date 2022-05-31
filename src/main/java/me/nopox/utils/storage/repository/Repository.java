@@ -17,4 +17,5 @@ public interface Repository<K, T> {
 
     void deleteAll();
 
+    CompletableFuture<List<T>> getAll();
 }
