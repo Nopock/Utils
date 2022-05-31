@@ -69,4 +69,20 @@ public abstract class RedisRepository<K extends String, T> implements Repository
             jedis.del(this.key);
         });
     }
+    
+    @Override
+    public CompletableFuture<List<T>> getAll() {
+        return CompletableFuture.supplyAsync(() -> {
+            Jedis jedis = this.jedis.getJedisResource();
+            
+            List<T> list = new ArrayList();
+            
+            list.addAll(Utils.getInstance().getGSON().fromJson(jedis.hgetall(this.key)));
+            
+            return list;
+           
+         
+        });
+    }
+    
 }

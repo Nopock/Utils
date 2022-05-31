@@ -75,7 +75,8 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      * @param key The key of the object (Ex. _id)
      * @param value The value of the object (Ex. A player's UUID)
      */
-    public CompletableFuture<T> byKey(String key, String value) {
+    @Override
+    public CompletableFuture<T> byKey(String key, K value) {
         return CompletableFuture.supplyAsync(() -> {
             Document doc = collection.find(Filters.eq(key, value)).first();
 
