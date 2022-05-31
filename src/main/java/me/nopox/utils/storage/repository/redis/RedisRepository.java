@@ -5,7 +5,8 @@ import me.nopox.utils.storage.JedisConnection;
 import me.nopox.utils.storage.repository.Repository;
 import redis.clients.jedis.Jedis;
 
-import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -77,7 +78,9 @@ public abstract class RedisRepository<K extends String, T> implements Repository
             
             List<T> list = new ArrayList();
             
-            list.addAll(Utils.getInstance().getGSON().fromJson(jedis.hgetall(this.key)));
+            for (String key : jedis.hkeys(this.key)) {
+                list.add(Utils.getInstance().getGSON().fromJson(jedis.hget(this.key, key), type));
+            }
             
             return list;
            

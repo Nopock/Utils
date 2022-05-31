@@ -1,5 +1,6 @@
 package me.nopox.utils.storage.repository;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
