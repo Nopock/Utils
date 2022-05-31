@@ -6,6 +6,7 @@ import com.mongodb.client.model.UpdateOptions;
 import me.nopox.utils.Utils;
 import me.nopox.utils.storage.MongoConnection;
 import me.nopox.utils.storage.repository.Repository;
+import org.bson.BsonDocument;
 import org.bson.Document;
 
 import java.lang.reflect.ParameterizedType;
@@ -96,6 +97,18 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
     }
 
+    /**
+     * This method deletes an object from the database
+     */
+    public void delete(K id) {
+        CompletableFuture.runAsync(() -> collection.deleteOne(Filters.eq("_id", id)));
+    }
 
-
+    /**
+     * This method deletes all objects from the database
+     */
+    public void deleteAll() {
+        CompletableFuture.runAsync(() -> collection.deleteMany(new BsonDocument()));
+    }
 }
+
