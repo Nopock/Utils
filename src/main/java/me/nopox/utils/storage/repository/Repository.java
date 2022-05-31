@@ -19,5 +19,5 @@ public interface Repository<K, T> {
 
     CompletableFuture<List<T>> getAll();
     
-    CompletableFuture<T> byField(String field, K id);
+    CompletableFuture<T> byKey(String field, K id);
 }
