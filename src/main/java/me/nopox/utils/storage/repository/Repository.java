@@ -18,4 +18,6 @@ public interface Repository<K, T> {
     void deleteAll();
 
     CompletableFuture<List<T>> getAll();
+    
+    CompletableFuture<T> byField(String field, K id);
 }
