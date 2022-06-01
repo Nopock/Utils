@@ -30,7 +30,7 @@ public class DiscordBot {
 
     private CommandClient commandClient;
 
-    @Getter private static boolean messageCache;
+    @Getter private static boolean messageCache = false;
     @Getter private static MessageCache messageCacheInstance;
 
     /**
@@ -113,9 +113,12 @@ public class DiscordBot {
         return this;
     }
 
-
+    /**
+     * This enables the message cache (Message cache is disabled by default and lasts 7d days after caching.)
+     */
     public DiscordBot enableMessageCache() {
-        this.messageCache = true;
+        messageCacheInstance = new MessageCache();
+        messageCache = true;
         return this;
     }
 
