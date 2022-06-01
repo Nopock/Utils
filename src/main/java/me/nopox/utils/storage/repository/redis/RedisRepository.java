@@ -71,8 +71,6 @@ public abstract class RedisRepository<K extends String, T> implements Repository
             jedis.del(this.key);
         });
     }
-    
-    }
 
     public void saveExpireable(K key, T value, int seconds) {
         CompletableFuture.runAsync(() -> {
