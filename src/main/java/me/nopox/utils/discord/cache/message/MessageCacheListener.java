@@ -13,10 +13,10 @@ public class MessageCacheListener extends ListenerAdapter {
         
         m.setAuthor(event.getMember().getId());
         m.setContent(event.getMessage().getContentRaw());
-        m.setTimeSent(system.currenttimemillis());
+        m.setTimeSent(System.currenttimemillis());
         m.setGuild(event.getGuild().getId());
         m.setChannel(event.getChannel().getId());
-        m.setChannelType(event.getChannel().getChannelType());
+        m.setChannelType(event.getChannel().getType());
 
         DiscordBot.getMessageCacheInstance().saveExpireable(event.getMessage().getId(), m, 60 * 60 * 24 * 7);
     }
