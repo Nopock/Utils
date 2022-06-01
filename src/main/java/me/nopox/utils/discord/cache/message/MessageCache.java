@@ -6,12 +6,12 @@ import net.dv8tion.jda.api.entities.Message;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class MessageCache extends RedisRepository<String, Message> {
+public class MessageCache extends RedisRepository<String, CachedMessage> {
 
     /**
      * This initiates the cache (Cache expires 7 days after)
      */
     public MessageCache() {
-        super("message-cache", Message.class);
+        super("message-cache", CachedMessage.class);
     }
 }
