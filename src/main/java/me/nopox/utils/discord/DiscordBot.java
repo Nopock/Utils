@@ -63,7 +63,7 @@ public class DiscordBot {
                 .setStatus(onlineStatus)
                 .setActivity(activity)
                 .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.CLIENT_STATUS)
-                .addEventListeners(commandClient, new MessageCacheListener());
+                .addEventListeners(new MessageCacheListener());
 
     }
 
