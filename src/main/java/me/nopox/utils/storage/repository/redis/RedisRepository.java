@@ -3,6 +3,7 @@ package me.nopox.utils.storage.repository.redis;
 import me.nopox.utils.Utils;
 import me.nopox.utils.storage.JedisConnection;
 import me.nopox.utils.storage.repository.Repository;
+import org.apache.commons.pool2.PooledObject;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -71,20 +72,14 @@ public abstract class RedisRepository<K extends String, T> implements Repository
         });
     }
     
-    @Override
-    public CompletableFuture<List<T>> getAll() {
-        return CompletableFuture.supplyAsync(() -> {
+    }
+
+    public void saveExpireable(K key, T value, int seconds) {
+        CompletableFuture.runAsync(() -> {
             Jedis jedis = this.jedis.getJedisResource();
-            
-            List<T> list = new ArrayList();
-            
-            for (String key : jedis.hkeys(this.key)) {
-                list.add(Utils.getInstance().getGSON().fromJson(jedis.hget(this.key, key), type));
-            }
-            
-            return list;
-           
-         
+
+            jedis.hset(this.key, key, Utils.getInstance().getGSON().toJson(value));
+            jedis.expire(this.key, seconds);
         });
     }
     
