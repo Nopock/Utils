@@ -14,22 +14,4 @@ public class MessageCache extends RedisRepository<String, Message> {
     public MessageCache() {
         super("message-cache", Message.class);
     }
-
-    @Override
-    /**
-     * Don't use this yet
-     */
-    @Deprecated
-    public CompletableFuture<List<Message>> getAll() {
-        return null;
-    }
-
-    @Override
-    /**
-     * Don't use this (Doesn't work for redis since redis is K, V)
-     */
-    @Deprecated
-    public CompletableFuture<Message> byKey(String field, String id) {
-        return null;
-    }
 }
