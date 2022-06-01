@@ -71,6 +71,17 @@ public abstract class RedisRepository<K extends String, T> implements Repository
             jedis.del(this.key);
         });
     }
+    
+    @Override
+    @Deprecated
+    public CompletableFuture<T> byKey(String field, K id) {
+        return null;
+    }
+    
+    @Override
+    public CompletableFuture<List<T>> getAll() {
+        return null;
+    }
 
     public void saveExpireable(K key, T value, long seconds) {
         CompletableFuture.runAsync(() -> {
