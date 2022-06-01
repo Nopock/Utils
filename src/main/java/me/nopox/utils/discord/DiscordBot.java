@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import lombok.Getter;
+import me.nopox.utils.discord.cache.message.MessageCache;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -27,6 +28,9 @@ public class DiscordBot {
     private CommandClientBuilder commandClientBuilder;
 
     private CommandClient commandClient;
+
+    @Getter private static boolean messageCache;
+    @Getter private static MessageCache messageCacheInstance;
 
     /**
      * This initiates the discord bot
@@ -94,12 +98,27 @@ public class DiscordBot {
 
         return this;
     }
-    
-    public void build() throws LoginException {
+
+    /**
+     * After this is called registerCommand and registerListener will not work
+     */
+    public DiscordBot build() throws LoginException {
         this.commandClient = this.commandClientBuilder.build();
         this.jdaBuilder.addEventListeners(commandClient);
         this.jda = jdaBuilder.build();
 
         this.jda.updateCommands().queue();
+
+        return this;
     }
+
+
+    public DiscordBot enableMessageCache() {
+        this.messageCache = true;
+        return this;
+    }
+
+
+
+
 }
