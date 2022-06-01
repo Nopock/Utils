@@ -13,7 +13,7 @@ public class MessageCacheListener extends ListenerAdapter {
         
         m.setAuthor(event.getMember().getId());
         m.setContent(event.getMessage().getContentRaw());
-        m.setTimeSent(System.currenttimemillis());
+        m.setTimeSent(System.currentTimeMillis());
         m.setGuild(event.getGuild().getId());
         m.setChannel(event.getChannel().getId());
         m.setChannelType(event.getChannel().getType());
