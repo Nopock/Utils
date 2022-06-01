@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class MessageCacheListener extends ListenerAdapter {
 
-    public void onMessage(MessageReceivedEvent event) {
+    public void onMessageReceived(MessageReceivedEvent event) {
         if (!DiscordBot.isMessageCache()) return;
 
         DiscordBot.getMessageCacheInstance().saveExpireable(event.getMessage().getId(), event.getMessage(), 60 * 60 * 24 * 7);
