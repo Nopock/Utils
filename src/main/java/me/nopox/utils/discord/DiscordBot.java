@@ -26,6 +26,15 @@ public class DiscordBot {
 
     private CommandClient commandClient;
 
+    /**
+     *
+     * @param onlineStatus The status of the bot (Ex. OnlineStatus.ONLINE)
+     * @param activity The bots activity (Ex. Activity.watching("test"))
+     * @param ownerId The ID of the owner of the bot
+     * @param guildId The guild id that the bot instantly updates slash commands to
+     * @param prefix The prefix of the bot (For non slash commands)
+     * @param token The bot token
+     */
     public DiscordBot(OnlineStatus onlineStatus, Activity activity, String ownerId, String guildId, String prefix, String token) throws LoginException {
         this.intents = EnumSet.of(
                 GatewayIntent.GUILD_MESSAGES,
