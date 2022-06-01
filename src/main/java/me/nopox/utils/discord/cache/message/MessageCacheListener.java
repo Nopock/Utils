@@ -3,13 +3,14 @@ package me.nopox.utils.discord.cache.message;
 import me.nopox.utils.discord.DiscordBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 public class MessageCacheListener extends ListenerAdapter {
 
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!DiscordBot.isMessageCache()) return;
         
-        CachedMessage m = new CachedMessage();
+        CachedMessage m = new CachedMessage(event.getMember().getId(), event.getMessage().getContentRaw(), System.currentTimeMillis(), event.getGuild().getId(), event.getChannel().getId(), event.getChannelType());
         
         m.setAuthor(event.getMember().getId());
         m.setContent(event.getMessage().getContentRaw());
