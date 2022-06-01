@@ -51,6 +51,8 @@ public class DiscordBot {
                 .addEventListeners(commandClient)
                 .build();
 
+        this.jda.updateCommands().queue();
+
     }
 
     public DiscordBot registerCommand(Command command) {
