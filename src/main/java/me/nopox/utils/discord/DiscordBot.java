@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import lombok.Getter;
 import me.nopox.utils.discord.cache.message.MessageCache;
+import me.nopox.utils.discord.cache.message.MessageCacheListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -62,7 +63,7 @@ public class DiscordBot {
                 .setStatus(onlineStatus)
                 .setActivity(activity)
                 .enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.CLIENT_STATUS)
-                .addEventListeners(commandClient);
+                .addEventListeners(commandClient, new MessageCacheListener());
 
     }
 
