@@ -3,7 +3,7 @@ package me.nopox.utils.discord.embed;
 import java.awt.*;
 
 public class EmbedBuilder {
-    private net.dv8tion.jda.api.EmbedBuilder eb;
+    private final net.dv8tion.jda.api.EmbedBuilder eb = new net.dv8tion.jda.api.EmbedBuilder();
 
     public EmbedBuilder(String title, Color color) {
         eb.setColor(color);
@@ -20,6 +20,10 @@ public class EmbedBuilder {
         this.eb.setFooter(text, iconURL);
 
         return this;
+    }
+
+    public net.dv8tion.jda.api.EmbedBuilder build() {
+        return this.eb;
     }
 
 
