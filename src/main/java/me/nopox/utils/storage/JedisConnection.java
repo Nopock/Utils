@@ -20,6 +20,8 @@ public class JedisConnection {
         this.jedisResource = jedisPool.getResource();
         jedisResource.connect();
         System.out.println("[Jedis] Connected to " + uri);
+
+        instance = this;
     }
 }
 
