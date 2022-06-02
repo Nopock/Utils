@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public class MessageCache extends RedisRepository<String, CachedMessage> {
 
     /**
-     * This initiates the cache (Cache expires 7 days after)
+     * This initiates the cache (Cache expires 12 hours after)
      */
     public MessageCache() {
         super("message-cache", CachedMessage.class);
