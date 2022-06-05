@@ -43,11 +43,13 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      */
     @Override
     public void save(K key, T value) {
+        long firstTime = System.currentTimeMillis();
         CompletableFuture.runAsync(() -> {
             Document doc = Document.parse(Utils.getInstance().getGSON().toJson(value));
 
             collection.updateOne(Filters.eq("_id", key), new Document("$set", doc), new UpdateOptions().upsert(true));
 
+            System.out.println("[MongoDB] Saved object to mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
 
         });
     }
@@ -60,10 +62,13 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      */
     @Override
     public CompletableFuture<T> byId(K id) {
+        long firstTime = System.currentTimeMillis();
         return CompletableFuture.supplyAsync(() -> {
             Document doc = collection.find(Filters.eq("_id", id)).first();
 
             if (doc == null) return null;
+
+            System.out.println("[MongoDB] Fetched object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
 
             return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
         });
@@ -77,10 +82,13 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      */
     @Override
     public CompletableFuture<T> byKey(String key, K value) {
+        long firstTime = System.currentTimeMillis();
         return CompletableFuture.supplyAsync(() -> {
             Document doc = collection.find(Filters.eq(key, value)).first();
 
             if (doc == null) return null;
+
+            System.out.println("[MongoDB] Fetched object from mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
 
             return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
         });

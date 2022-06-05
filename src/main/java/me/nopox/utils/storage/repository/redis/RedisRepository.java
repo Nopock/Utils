@@ -29,18 +29,23 @@ public abstract class RedisRepository<K extends String, T> implements Repository
 
     @Override
     public void save(K key, T value) {
+        long firstTime = System.currentTimeMillis();
         CompletableFuture.runAsync(() -> {
             Jedis jedis = this.jedis.getJedisResource();
 
             jedis.hset(this.key, key, Utils.getInstance().getGSON().toJson(value));
+
+            System.out.println("[Redis] Saved object to redis: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
         });
     }
 
     @Override
     public CompletableFuture<T> byId(K id) {
+        long firstTime = System.currentTimeMillis();
         return CompletableFuture.supplyAsync(() -> {
             Jedis jedis = this.jedis.getJedisResource();
 
+            System.out.println("[Redis] Fetched object from redis: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
             return Utils.getInstance().getGSON().fromJson(jedis.hget(this.key, id), type);
         });
     }
@@ -56,10 +61,13 @@ public abstract class RedisRepository<K extends String, T> implements Repository
 
     @Override
     public void delete(K id) {
+        long firstTime = System.currentTimeMillis();
         CompletableFuture.runAsync(() -> {
             Jedis jedis = this.jedis.getJedisResource();
 
             jedis.hdel(this.key, id);
+
+            System.out.println("[Redis] Deleted object from redis: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
         });
     }
 
