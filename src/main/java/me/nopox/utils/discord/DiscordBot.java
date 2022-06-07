@@ -95,7 +95,7 @@ public class DiscordBot {
      * @param listeners
      */
     public DiscordBot registerListener(Object... listeners) {
-        this.jdaBuilder.addEventListeners(listeners);
+        this.jdaBuilder.addEventListeners(  listeners);
 
         return this;
     }

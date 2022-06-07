@@ -51,12 +51,10 @@ public abstract class RedisRepository<K extends String, T> implements Repository
     }
 
     @Override
-    public CompletableFuture<Boolean> exists(K id) {
-        return CompletableFuture.supplyAsync(() -> {
-            Jedis jedis = this.jedis.getJedisResource();
+    public boolean exists(K id) {
+        Jedis jedis = this.jedis.getJedisResource();
 
-            return jedis.hexists(this.key, id);
-        });
+        return jedis.hexists(this.key, id);
     }
 
     @Override

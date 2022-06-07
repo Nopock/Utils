@@ -12,7 +12,7 @@ public interface Repository<K, T> {
 
     CompletableFuture<T> byId(K id);
 
-    CompletableFuture<Boolean> exists(K id);
+    boolean exists(K id);
 
     void delete(K id);
 
