@@ -10,6 +10,7 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -21,6 +22,7 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
     private final MongoCollection<Document> collection;
     private final Class<T> type;
+    private final HashMap<K, T> cache;
 
     /**
      * This needs to be called to initialize the repository
@@ -32,11 +34,12 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         System.out.println("[MongoRepository] Initializing repository for collection " + collectionName);
         this.collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
         this.type = clazz;
+        this.cache = new HashMap<>();
     }
 
 
     /**
-     * This method saves the object to the database
+     * This method saves the object to the cache.
      *
      * @param key The key of the object (Ex. A player's UUID)
      * @param value The object to save
@@ -45,13 +48,40 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     public void save(K key, T value) {
         long firstTime = System.currentTimeMillis();
         CompletableFuture.runAsync(() -> {
-            Document doc = Document.parse(Utils.getInstance().getGSON().toJson(value));
+
+            cache.put(key, value);
+
+            System.out.println("[MongoDB] Saved object to cache: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+
+        });
+
+    }
+
+    /**
+     * This method saves the object from the cache
+     * to mongo.
+     *
+     * @param key The key of the object (Ex. A player's UUID)
+     */
+    public void saveToMongo(K key) {
+        long firstTime = System.currentTimeMillis();
+        CompletableFuture.runAsync(() -> {
+            Document doc = Document.parse(Utils.getInstance().getGSON().toJson(cache.get(key)));
 
             collection.updateOne(Filters.eq("_id", key), new Document("$set", doc), new UpdateOptions().upsert(true));
 
             System.out.println("[MongoDB] Saved object to mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
 
         });
+    }
+
+    /**
+     * This method fetches the object from the cache.
+     *
+     * @param key The key of the object (Ex. A player's UUID)
+     */
+    public T fromCache(K key) {
+        return cache.get(key);
     }
 
     /**
@@ -120,6 +150,22 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     @Override
     public void deleteAll() {
         CompletableFuture.runAsync(() -> collection.deleteMany(new BsonDocument()));
+    }
+
+    /**
+     * This method flushes the cache to mongodb
+     *
+     * I only use this method when the server is shutting
+     * down because it effects the performance of the server.
+     */
+    public void flush(boolean shouldClearCache) {
+        for (K key : cache.keySet()) {
+            saveToMongo(key);
+        }
+
+        if (shouldClearCache) {
+            cache.clear();
+        }
     }
 }
 
