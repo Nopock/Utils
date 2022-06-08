@@ -76,6 +76,25 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     }
 
     /**
+     * This method fetches the object from mongo and
+     * puts it into the cache.
+     */
+    public void loadFromMongo(K id) {
+        long firstTime = System.currentTimeMillis();
+        byId(id).thenAccept(value -> {
+            cache.put(id, value);
+            System.out.println("[MongoDB] Loaded object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+        });
+    }
+
+    /**
+     * This method returns if the cache contains the object
+     */
+    public boolean isCached(K id) {
+        return cache.containsKey(id);
+    }
+
+    /**
      * This method fetches the object from the cache.
      *
      * @param key The key of the object (Ex. A player's UUID)
