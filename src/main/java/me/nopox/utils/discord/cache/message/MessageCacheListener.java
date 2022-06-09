@@ -19,7 +19,7 @@ public class MessageCacheListener extends ListenerAdapter {
         m.setChannel(event.getChannel().getId());
         m.setChannelType(event.getChannel().getType());
 
-        DiscordBot.getMessageCacheInstance().saveExpireable(event.getMessage().getId(), m, 60 * 60 * 12);
+        //DiscordBot.getMessageCacheInstance().saveExpireable(event.getMessage().getId(), m, 60 * 60 * 12);
     }
     
     //TODO Remove it from redis after it has been deleted. Not sure how I will handle that ngl... might have to make the user remove it from the cache because if I just remove it here then I believe when they try and access it then it will be null...
