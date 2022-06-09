@@ -88,14 +88,5 @@ public abstract class RedisRepository<K extends String, T> implements Repository
     public CompletableFuture<List<T>> getAll() {
         return null;
     }
-
-    public void saveExpireable(K key, T value, long seconds) {
-        CompletableFuture.runAsync(() -> {
-            Jedis jedis = this.jedis.getJedisResource();
-
-            jedis.hset(this.key, key, Utils.getInstance().getGSON().toJson(value));
-            jedis.expire(this.key, seconds);
-        });
-    }
     
 }
