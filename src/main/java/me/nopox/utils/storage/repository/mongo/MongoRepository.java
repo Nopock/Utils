@@ -23,6 +23,7 @@ public abstract class MongoRepository<K extends String, T> implements Repository
     private final MongoCollection<Document> collection;
     private final Class<T> type;
     private final HashMap<K, T> cache;
+    private final boolean shouldLog;
 
     /**
      * This needs to be called to initialize the repository
@@ -30,11 +31,12 @@ public abstract class MongoRepository<K extends String, T> implements Repository
      * @param collectionName The name of the collection that this repository will use
      * @param clazz The class of the object that this repository will store
      */
-    public MongoRepository(String collectionName, Class<T> clazz) {
+    public MongoRepository(String collectionName, Class<T> clazz, boolean shouldLog) {
         System.out.println("[MongoRepository] Initializing repository for collection " + collectionName);
         this.collection = MongoConnection.getInstance().getDatabase().getCollection(collectionName);
         this.type = clazz;
         this.cache = new HashMap<>();
+        this.shouldLog = shouldLog;
     }
 
 
@@ -51,8 +53,10 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
             cache.put(key, value);
 
-            System.out.println("[MongoDB] Saved object to cache: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            if (shouldLog) {
+                System.out.println("[MongoDB] Saved object to cache: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
 
+            }
         });
 
     }
@@ -70,8 +74,9 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
             collection.updateOne(Filters.eq("_id", key), new Document("$set", doc), new UpdateOptions().upsert(true));
 
-            System.out.println("[MongoDB] Saved object to mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
-
+            if (shouldLog) {
+                System.out.println("[MongoDB] Saved object to mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            }
         });
     }
 
@@ -83,7 +88,10 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         long firstTime = System.currentTimeMillis();
         byId(id).thenAccept(value -> {
             cache.put(id, value);
-            System.out.println("[MongoDB] Loaded object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+
+            if (shouldLog) {
+                System.out.println("[MongoDB] Loaded object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            }
         });
     }
 
@@ -117,7 +125,9 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
             if (doc == null) return null;
 
-            System.out.println("[MongoDB] Fetched object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            if (shouldLog) {
+                System.out.println("[MongoDB] Fetched object from mongo: " + id + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            }
 
             return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
         });
@@ -137,7 +147,9 @@ public abstract class MongoRepository<K extends String, T> implements Repository
 
             if (doc == null) return null;
 
-            System.out.println("[MongoDB] Fetched object from mongo: " + key + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            if (shouldLog) {
+                System.out.println("[MongoDB] Fetched object from mongo: " + value + " in " + (System.currentTimeMillis() - firstTime) + "ms.");
+            }
 
             return Utils.getInstance().getGSON().fromJson(doc.toJson(), type);
         });
