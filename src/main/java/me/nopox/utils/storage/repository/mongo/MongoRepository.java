@@ -39,6 +39,9 @@ public abstract class MongoRepository<K extends String, T> implements Repository
         this.shouldLog = shouldLog;
     }
 
+    public MongoCollection<Document> getCollection() {
+        return collection;
+    }
 
     /**
      * This method saves the object to the cache.
